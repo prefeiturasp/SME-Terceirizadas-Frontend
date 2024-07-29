@@ -10,7 +10,7 @@ export interface ArquivoFormInterface {
 }
 
 export interface NovoRelatorioVisitasFormInterface {
-  uuid?: number;
+  uuid?: string;
   diretoria_regional: string;
   escola: string;
   data: string;
@@ -22,6 +22,8 @@ export interface NovoRelatorioVisitasFormInterface {
   total_matriculados_por_data: number;
   maior_frequencia_no_periodo: number;
   anexos: Array<ArquivoInterface>;
+  notificacoes_assinadas: Array<ArquivoInterface>;
+  status?: string;
 }
 
 export interface InitialValuesInterface {
@@ -118,6 +120,7 @@ export interface InsumoInterface {
 export interface FiltrosRelatoriosVisitasInterface {
   diretoria_regional?: string;
   unidade_educacional?: string;
+  nome_nutricionista?: string;
   data_inicial?: string;
   data_final?: string;
   status?: string;
@@ -158,4 +161,9 @@ export interface RespostaOcorrenciaNaoSeAplicaInterface {
   descricao: string;
   formulario_base: number;
   tipo_ocorrencia: string;
+}
+
+export interface NutricionistaOptionInterface {
+  value: string;
+  label: string;
 }

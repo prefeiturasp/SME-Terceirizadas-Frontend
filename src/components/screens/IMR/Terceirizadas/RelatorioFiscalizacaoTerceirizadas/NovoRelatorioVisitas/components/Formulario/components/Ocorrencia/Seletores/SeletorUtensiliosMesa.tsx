@@ -11,12 +11,13 @@ type SeletorUtensiliosMesaType = {
   titulo: string;
   name: string;
   escolaSelecionada: EscolaLabelInterface;
+  somenteLeitura: boolean;
 };
 
 export const SeletorUtensiliosMesa = ({
   ...props
 }: SeletorUtensiliosMesaType) => {
-  const { titulo, name, escolaSelecionada } = props;
+  const { titulo, name, escolaSelecionada, somenteLeitura } = props;
   const [options, setOptions] = useState<Array<SelectOption>>([]);
 
   const getOptionsAsync = async (edital_uuid) => {
@@ -54,6 +55,7 @@ export const SeletorUtensiliosMesa = ({
       className="seletor-imr"
       required
       validate={required}
+      disabled={somenteLeitura}
     />
   );
 };

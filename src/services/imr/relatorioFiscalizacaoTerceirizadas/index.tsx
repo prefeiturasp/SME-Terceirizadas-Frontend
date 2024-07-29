@@ -2,10 +2,9 @@ import axios from "../../_base";
 import { API_URL } from "constants/config";
 import { ErrorHandlerFunction } from "../../service-helpers";
 import { NovoRelatorioVisitasFormInterface } from "interfaces/imr.interface";
-import { getMensagemDeErro } from "helpers/statusErrors";
-import { toastError } from "components/Shareable/Toast/dialogs";
 import {
   ResponseEquipamentoInterface,
+  ResponseExportarPDFAssincronoInterface,
   ResponseFormularioSupervisaoTiposOcorrenciasInterface,
   ResponseInsumoInterface,
   ResponseMobiliarioInterface,
@@ -13,18 +12,7 @@ import {
   ResponseReparoEAdaptacaoInterface,
   ResponseUtensilioCozinhaInterface,
   ResponseUtensilioMesaInterface,
-  ResponseRelatoriosVisitas,
 } from "interfaces/responses.interface";
-
-export const listRelatoriosVisitaSupervisao = async (
-  params: URLSearchParams
-): Promise<ResponseRelatoriosVisitas> => {
-  try {
-    return await axios.get("/imr/formulario-supervisao/", { params });
-  } catch (error) {
-    toastError(getMensagemDeErro(error.response.status));
-  }
-};
 
 export const getPeriodosVisita = async () => {
   const url = `${API_URL}/imr/periodos-de-visita/`;
@@ -75,6 +63,15 @@ export const updateFormularioSupervisao = async (
 ) => {
   const url = `${API_URL}/imr/formulario-supervisao/${params.uuid}/`;
   const response = await axios.put(url, params).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
+};
+
+export const deleteFormularioSupervisao = async (params: { uuid: string }) => {
+  const url = `${API_URL}/imr/rascunho-formulario-supervisao/${params.uuid}/`;
+  const response = await axios.delete(url).catch(ErrorHandlerFunction);
   if (response) {
     const data = { data: response.data, status: response.status };
     return data;
@@ -207,6 +204,30 @@ export const getInsumos = async (params: { edital_uuid: string }) => {
   const url = `${API_URL}/imr/insumos/`;
   const response: ResponseInsumoInterface = await axios
     .get(url, { params })
+    .catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
+};
+
+export const exportarPDFRelatorioFiscalizacao = async (params: {
+  uuid: string;
+}) => {
+  const url = `${API_URL}/imr/formulario-supervisao/${params.uuid}/relatorio-pdf/`;
+  const response: ResponseExportarPDFAssincronoInterface = await axios
+    .get(url)
+    .catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
+};
+
+export const exportarPDFRelatorioNotificacao = async (uuid: string) => {
+  const url = `${API_URL}/imr/formulario-supervisao/${uuid}/gerar-relatorio-notificacoes/`;
+  const response: ResponseExportarPDFAssincronoInterface = await axios
+    .get(url)
     .catch(ErrorHandlerFunction);
   if (response) {
     const data = { data: response.data, status: response.status };

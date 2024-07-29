@@ -20,6 +20,7 @@ type OcorrenciaType = {
   name_grupos: string;
   indexFieldArray: number;
   respostasOcorrencias?: Array<RespostaOcorrenciaInterface>;
+  somenteLeitura: boolean;
 };
 
 export const Ocorrencia = ({ ...props }: OcorrenciaType) => {
@@ -30,6 +31,7 @@ export const Ocorrencia = ({ ...props }: OcorrenciaType) => {
     name_grupos,
     indexFieldArray,
     respostasOcorrencias,
+    somenteLeitura,
   } = props;
 
   const excluiGrupoDeResposta = (): void => {
@@ -53,7 +55,7 @@ export const Ocorrencia = ({ ...props }: OcorrenciaType) => {
   return tipoOcorrencia.parametrizacoes.length ? (
     <tr className="tipo-ocorrencia-parametrizacao">
       <td colSpan={2} className="py-3">
-        {indexFieldArray > 0 && (
+        {indexFieldArray > 0 && !somenteLeitura && (
           <Botao
             titulo="Excluir"
             className="no-border float-end"
@@ -81,6 +83,7 @@ export const Ocorrencia = ({ ...props }: OcorrenciaType) => {
                 form={form}
                 escolaSelecionada={escolaSelecionada}
                 UUIDResposta={UUID}
+                somenteLeitura={somenteLeitura}
               />
             </div>
           );

@@ -5,10 +5,11 @@ import { required } from "helpers/fieldValidators";
 type OpçoesSimNaoType = {
   titulo: string;
   name: string;
+  somenteLeitura: boolean;
 };
 
 export const OpçoesSimNao = ({ ...props }: OpçoesSimNaoType) => {
-  const { titulo, name } = props;
+  const { titulo, name, somenteLeitura } = props;
 
   return (
     <div className="col-12">
@@ -28,6 +29,7 @@ export const OpçoesSimNao = ({ ...props }: OpçoesSimNaoType) => {
             required
             validate={required}
             style={{ paddingRight: 2 }}
+            disabled={somenteLeitura}
           />
           <label htmlFor="sim">Sim</label>
         </div>
@@ -40,6 +42,7 @@ export const OpçoesSimNao = ({ ...props }: OpçoesSimNaoType) => {
             id="nao"
             required
             validate={required}
+            disabled={somenteLeitura}
           />
           <label htmlFor="nao">Não</label>
         </div>

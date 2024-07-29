@@ -206,6 +206,9 @@ export const RELATORIO_FISCALIZACAO_TERCEIRIZADAS =
   "relatorio-fiscalizacao-terceirizadas";
 export const PAINEL_RELATORIOS_FISCALIZACAO = "painel-relatorios-fiscalizacao";
 export const RELATORIO_FISCALIZACAO = "relatorio-fiscalizacao";
+export const DETALHAR_RELATORIO_FISCALIZACAO =
+  "detalhar-relatorio-fiscalizacao";
+export const EDITAR_RELATORIO_FISCALIZACAO = "editar-relatorio-fiscalizacao";
 export const REGISTRAR_OCORRENCIAS = "registrar-ocorrencias";
 export const REGISTRAR_NOVA_OCORRENCIA = "registrar-nova-ocorrencia";
 

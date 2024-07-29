@@ -25,6 +25,23 @@ export const tiposAlimentacaoPorPeriodoETipoUnidade = (
     .join(", ");
 };
 
+export const arrTiposAlimentacaoPorPeriodoETipoUnidade = (
+  vinculos,
+  periodo,
+  tipoUnidade
+) => {
+  return vinculos
+    .find(
+      (vinculo) =>
+        vinculo.periodo_escolar.nome === periodo &&
+        vinculo.tipo_unidade_escolar.iniciais.includes(tipoUnidade)
+    )
+    .tipos_alimentacao.filter(
+      (tipo_alimentacao) =>
+        tipo_alimentacao.nome.toUpperCase() !== "LANCHE EMERGENCIAL"
+    );
+};
+
 export const totalAlunosPorPeriodoCEI = (periodos, periodo) => {
   let totalAlunos = 0;
   return periodos
@@ -85,6 +102,7 @@ export const formataInclusaoCEMEI = (values, vinculos) => {
           matriculados_quando_criado: quantidade_periodo.EMEI
             ? quantidade_periodo.EMEI
             : "1",
+          tipos_alimentacao: quantidade_periodo.tipos_alimentacao_selecionados,
         });
       }
     });
@@ -113,11 +131,30 @@ export const validarSubmit = (values) => {
       .filter((quantidade_periodo) => quantidade_periodo.checked)
       .find(
         (quantidade_periodo) =>
-          !quantidade_periodo.faixas && !quantidade_periodo.alunos_emei
+          (!quantidade_periodo.faixas && !quantidade_periodo.alunos_emei) ||
+          (quantidade_periodo.alunos_emei &&
+            (!quantidade_periodo.tipos_alimentacao_selecionados ||
+              !quantidade_periodo.tipos_alimentacao_selecionados?.length)) ||
+          (quantidade_periodo.tipos_alimentacao_selecionados?.length &&
+            !quantidade_periodo.alunos_emei)
       )
   ) {
-    erro =
+    let erro =
       "Ao selecionar um período, preencher ao menos uma quantidade de alunos";
+    if (
+      values.quantidades_periodo
+        .filter((quantidade_periodo) => quantidade_periodo.checked)
+        .find(
+          (quantidade_periodo) =>
+            (quantidade_periodo.alunos_emei &&
+              (!quantidade_periodo.tipos_alimentacao_selecionados ||
+                !quantidade_periodo.tipos_alimentacao_selecionados?.length)) ||
+            (quantidade_periodo.tipos_alimentacao_selecionados?.length &&
+              !quantidade_periodo.alunos_emei)
+        )
+    ) {
+      erro = "Selecionar alimentação e preencher quantidade de alunos";
+    }
     return erro;
   }
 
