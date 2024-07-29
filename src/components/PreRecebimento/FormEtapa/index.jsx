@@ -279,7 +279,6 @@ export default ({
                   validate={() =>
                     duplicados.includes(index) && "Parte já selecionada"
                   }
-                  required
                   disabled={desabilitar[index]}
                 />
               </div>
