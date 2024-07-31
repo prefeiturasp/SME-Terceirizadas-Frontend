@@ -38,13 +38,15 @@ export const rotasDesperdicio: Array<RotaInterface> = [
     path: `/${constants.DESPERDICIO}/${constants.RELATORIOS}/${constants.RELATORIO_CONTROLE_SOBRAS}`,
     component: RelatorioControleSobrasPage,
     exact: true,
-    tipoUsuario: usuarioEhAdmQualquerEmpresa(),
+    tipoUsuario:
+      usuarioEhAdmQualquerEmpresa() || usuarioEhCoordenadorNutriSupervisao(),
   },
   {
     path: `/${constants.DESPERDICIO}/${constants.RELATORIOS}/${constants.RELATORIO_CONTROLE_SOBRAS_BRUTO}`,
     component: RelatorioControleSobrasBrutoPage,
     exact: true,
-    tipoUsuario: usuarioEhAdmQualquerEmpresa(),
+    tipoUsuario:
+      usuarioEhAdmQualquerEmpresa() || usuarioEhCoordenadorNutriSupervisao(),
   },
   {
     path: `/${constants.DESPERDICIO}/${constants.CADASTROS}/${constants.TIPOS_RECIPIENTE}`,

@@ -49,7 +49,7 @@ const TabelaControleSobras = ({ list, getFiltros }) => {
                   <th>Período</th>
                   <th>Tipo de Alimentação</th>
                   <th>Tipo de Alimento</th>
-                  <th>Especificar</th>
+                  <th>Especificar Alimento</th>
                   <th>Tipo de Recipiente</th>
                   <th>Peso do Recipiente (Kg)</th>
                   <th>Peso do Alimento Pronto com Recipiente</th>

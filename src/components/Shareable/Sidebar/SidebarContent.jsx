@@ -8,6 +8,7 @@ import {
   usuarioEhEmpresaTerceirizada,
   usuarioEhCODAEGestaoProduto,
   usuarioEhNutricionistaSupervisao,
+  usuarioEhCoordenadorNutriSupervisao,
   usuarioEhDRE,
   usuarioEhLogistica,
   usuarioEhPreRecebimento,
@@ -116,7 +117,9 @@ export const SidebarContent = () => {
       ehUsuarioRelatorios() ||
       usuarioEhGticCODAE());
   const exibirMenuDesperdicio =
-    usuarioEhAdmQualquerEmpresa() || usuarioEhNutricionistaSupervisao();
+    usuarioEhAdmQualquerEmpresa() ||
+    usuarioEhNutricionistaSupervisao() ||
+    usuarioEhCoordenadorNutriSupervisao();
   const exibirDietaEspecial =
     usuarioEhCODAEGestaoAlimentacao() ||
     usuarioEhCODAENutriManifestacao() ||

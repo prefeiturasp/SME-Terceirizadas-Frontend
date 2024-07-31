@@ -22,8 +22,10 @@ import {
 const MenuDesperdicio = ({ activeMenu, onSubmenuClick }) => {
   const exibirCadastros = usuarioEhCoordenadorNutriSupervisao();
 
-  const exibirRelatorios =
-    usuarioEhCoordenadorNutriSupervisao() || usuarioEhAdmQualquerEmpresa();
+  const exibirRelatoriosRestos = usuarioEhCoordenadorNutriSupervisao();
+  const exibirRelatoriosSobras =
+    usuarioEhAdmQualquerEmpresa() || usuarioEhCoordenadorNutriSupervisao();
+  const exibirRelatorios = exibirRelatoriosRestos || exibirRelatoriosSobras;
 
   return (
     <Menu id="desperdicio" icon="fas fa-recycle" title={"Desperdicio"}>
@@ -46,14 +48,14 @@ const MenuDesperdicio = ({ activeMenu, onSubmenuClick }) => {
           title="Relatórios"
           activeMenu={activeMenu}
         >
-          {usuarioEhCoordenadorNutriSupervisao() && (
+          {exibirRelatoriosRestos && (
             <LeafItem
               to={`/${DESPERDICIO}/${RELATORIOS}/${RELATORIO_CONTROLE_RESTOS}`}
             >
               Relatório de Restos
             </LeafItem>
           )}
-          {usuarioEhAdmQualquerEmpresa() && (
+          {exibirRelatoriosSobras && (
             <>
               <LeafItem
                 to={`/${DESPERDICIO}/${RELATORIOS}/${RELATORIO_CONTROLE_SOBRAS}`}
