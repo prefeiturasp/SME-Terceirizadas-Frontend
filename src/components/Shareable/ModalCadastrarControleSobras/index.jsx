@@ -389,22 +389,6 @@ const ModalCadastrarControleSobras = ({
                     </div>
                     <div className="col-6">
                       <Field
-                        label="Especificar"
-                        name="especificar"
-                        component={InputText}
-                        placeholder={""}
-                        maxlength="250"
-                        className={
-                          registroEdicao
-                            ? "input-controle-sobras"
-                            : "input-busca-nome-item"
-                        }
-                      />
-                    </div>
-                  </div>
-                  <div className="row">
-                    <div className="col-4">
-                      <Field
                         dataSource={tiposAlimentacao.map((tipo) => tipo.nome)}
                         component={AutoCompleteField}
                         name="tipo_alimentacao"
@@ -422,7 +406,9 @@ const ModalCadastrarControleSobras = ({
                         )}
                       />
                     </div>
-                    <div className="col-4">
+                  </div>
+                  <div className="row">
+                    <div className="col-3">
                       <Field
                         dataSource={tiposAlimento.map((tipo) => tipo.nome)}
                         component={AutoCompleteField}
@@ -441,7 +427,21 @@ const ModalCadastrarControleSobras = ({
                         )}
                       />
                     </div>
-                    <div className="col-4">
+                    <div className="col-3">
+                      <Field
+                        label="Especificar Alimento"
+                        name="especificar"
+                        component={InputText}
+                        placeholder={""}
+                        maxlength="250"
+                        className={
+                          registroEdicao
+                            ? "input-controle-sobras"
+                            : "input-busca-nome-item"
+                        }
+                      />
+                    </div>
+                    <div className="col-6">
                       <Field
                         dataSource={tiposRecipiente.map((tipo) => tipo.nome)}
                         component={AutoCompleteField}
