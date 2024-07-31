@@ -27,6 +27,7 @@ import {
 import { formatarPayload, validarSubmit } from "./helpers";
 import {
   composeValidators,
+  // eslint-disable-next-line no-unused-vars
   ehDiaUtil,
   required,
 } from "helpers/fieldValidators";
@@ -50,6 +51,7 @@ export const AlteracaoDeCardapioCEMEI = ({ ...props }) => {
     vinculos,
     proximosDoisDiasUteis,
     proximosCincoDiasUteis,
+    // eslint-disable-next-line no-unused-vars
     feriadosAno,
   } = props;
 
@@ -560,12 +562,7 @@ export const AlteracaoDeCardapioCEMEI = ({ ...props }) => {
                       label="Alterar dia"
                       disabled={values.data_inicial || desabilitarAlterarDia}
                       validate={
-                        values.data_inicial
-                          ? ehDiaUtil(values, motivos, feriadosAno)
-                          : composeValidators(
-                              required,
-                              ehDiaUtil(values, motivos, feriadosAno)
-                            )
+                        values.data_inicial ? null : composeValidators(required)
                       }
                       usarDirty={true}
                       inputOnChange={(value) => {
