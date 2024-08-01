@@ -113,3 +113,12 @@ export const downloadArquivoLaudoAssinado = async (
     toastError("Houve um erro ao baixar o arquivo de Laudo.");
   }
 };
+
+export const atualizarDocumentoRecebimento = async (
+  payload: CorrecaoDocumentoPayload,
+  uuid: string
+) =>
+  await axios.patch(
+    `/documentos-de-recebimento/${uuid}/atualizar-documentos/`,
+    payload
+  );

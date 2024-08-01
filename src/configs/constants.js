@@ -277,6 +277,8 @@ export const CADASTRO_DOCUMENTOS_RECEBIMENTO =
   "cadastro-documentos-recebimento";
 export const DETALHAR_FORNECEDOR_DOCUMENTO_RECEBIMENTO =
   "detalhe-fornecedor-documento-recebimento";
+export const ATUALIZAR_FORNECEDOR_DOCUMENTO_RECEBIMENTO =
+  "atualizar-fornecedor-documento-recebimento";
 export const DETALHAR_CODAE_DOCUMENTO_RECEBIMENTO =
   "detalhe-codae-documento-recebimento";
 export const ANALISAR_DOCUMENTO_RECEBIMENTO = "analise-documento-recebimento";

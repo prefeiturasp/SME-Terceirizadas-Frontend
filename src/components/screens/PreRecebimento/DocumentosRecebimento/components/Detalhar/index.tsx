@@ -5,6 +5,7 @@ import {
   DOCUMENTOS_RECEBIMENTO,
   PRE_RECEBIMENTO,
   PAINEL_DOCUMENTOS_RECEBIMENTO,
+  ATUALIZAR_FORNECEDOR_DOCUMENTO_RECEBIMENTO,
 } from "configs/constants";
 import { useNavigate } from "react-router-dom";
 import BotaoVoltar from "components/Shareable/Page/BotaoVoltar";
@@ -18,6 +19,12 @@ import {
 import ArquivosTipoRecebimento from "../ArquivosTipoDocumento";
 import OutrosDocumentos from "../OutrosDocumentos";
 import { usuarioEhEmpresaFornecedor } from "helpers/utilities";
+import Botao from "components/Shareable/Botao";
+import {
+  BUTTON_TYPE,
+  BUTTON_STYLE,
+} from "components/Shareable/Botao/constants";
+import { STATUS_DOCUMENTOS_DE_RECEBIMENTO } from "constants/shared";
 
 export default () => {
   const navigate = useNavigate();
@@ -36,6 +43,19 @@ export default () => {
     navigate(link);
   };
 
+  const showBotaoAtualizarDocumento = () => {
+    return (
+      usuarioEhEmpresaFornecedor() &&
+      objeto.status === STATUS_DOCUMENTOS_DE_RECEBIMENTO.APROVADO
+    );
+  };
+
+  const goToAtualizarFornecedorDocumentosRecebimentoPage = () => {
+    navigate(
+      `/${PRE_RECEBIMENTO}/${ATUALIZAR_FORNECEDOR_DOCUMENTO_RECEBIMENTO}?uuid=${objeto.uuid}`
+    );
+  };
+
   const carregarDados = async (): Promise<void> => {
     const urlParams = new URLSearchParams(window.location.search);
     const uuid = urlParams.get("uuid");
@@ -46,9 +66,12 @@ export default () => {
     const laudoIndex = objeto.tipos_de_documentos.findIndex(
       (tipo) => tipo.tipo_documento === "LAUDO"
     );
-    const laudo = objeto.tipos_de_documentos.splice(laudoIndex, 1)[0];
 
-    setLaudo(laudo);
+    if (laudoIndex !== -1) {
+      const laudo = objeto.tipos_de_documentos.splice(laudoIndex, 1)[0];
+      setLaudo(laudo);
+    }
+
     setObjeto(objeto);
   };
 
@@ -127,7 +150,18 @@ export default () => {
 
           <hr />
 
-          <BotaoVoltar onClick={voltarPagina} />
+          <div className="my-5">
+            {showBotaoAtualizarDocumento() ? (
+              <Botao
+                texto="Atualizar Documentos"
+                type={BUTTON_TYPE.BUTTON}
+                style={BUTTON_STYLE.GREEN}
+                className="float-end ms-3"
+                onClick={goToAtualizarFornecedorDocumentosRecebimentoPage}
+              />
+            ) : null}
+            <BotaoVoltar onClick={voltarPagina} />
+          </div>
         </div>
       </div>
     </Spin>
