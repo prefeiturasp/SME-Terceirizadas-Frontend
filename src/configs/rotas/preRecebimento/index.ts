@@ -51,6 +51,7 @@ import CronogramaEntregaPage from "pages/PreRecebimento/CronogramaEntregaPage";
 import DetalharCodaeDocumentosRecebimentoPage from "pages/PreRecebimento/DetalharCodaeDocumentosRecebimentoPage";
 import DetalharCronogramaPage from "pages/PreRecebimento/DetalharCronogramaPage";
 import DetalharFornecedorDocumentosRecebimentoPage from "pages/PreRecebimento/DetalharFornecedorDocumentosRecebimentoPage";
+import AtualizarFornecedorDocumentosRecebimentoPage from "pages/PreRecebimento/AtualizarFornecedorDocumentosRecebimentoPage";
 import DetalharLayoutEmbalagemPage from "pages/PreRecebimento/DetalharLayoutEmbalagemPage";
 import DetalharSolicitacaoAlteracaoLayoutEmbalagemPage from "pages/PreRecebimento/DetalharSolicitacaoAlteracaoLayoutEmbalagemPage";
 import AnaliseDilogCronogramaPage from "pages/PreRecebimento/DetalharSolicitacaoCronograma";
@@ -210,6 +211,11 @@ export const rotasPreRecebimento: Array<RotaInterface> = [
     component: DetalharFornecedorDocumentosRecebimentoPage,
     tipoUsuario:
       usuarioEhEmpresaFornecedor() || usuarioComAcessoAoPainelDocumentos(),
+  },
+  {
+    path: `/${constants.PRE_RECEBIMENTO}/${constants.ATUALIZAR_FORNECEDOR_DOCUMENTO_RECEBIMENTO}`,
+    component: AtualizarFornecedorDocumentosRecebimentoPage,
+    tipoUsuario: usuarioEhEmpresaFornecedor(),
   },
   {
     path: `/${constants.PRE_RECEBIMENTO}/${constants.DETALHAR_CODAE_DOCUMENTO_RECEBIMENTO}`,
