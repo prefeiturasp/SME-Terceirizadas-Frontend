@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Spin } from "antd";
 import moment from "moment";
 import "./styles.scss";
@@ -44,6 +44,7 @@ import {
 } from "../../../../../Shareable/Toast/dialogs";
 import ArquivosTipoRecebimento from "../ArquivosTipoDocumento";
 import OutrosDocumentos from "../OutrosDocumentos";
+import { STATUS_DOCUMENTOS_DE_RECEBIMENTO } from "constants/shared";
 
 export default () => {
   const navigate = useNavigate();
@@ -77,9 +78,10 @@ export default () => {
     const laudoIndex = objeto.tipos_de_documentos.findIndex(
       (tipo) => tipo.tipo_documento === "LAUDO"
     );
-    const laudo = objeto.tipos_de_documentos.splice(laudoIndex, 1)[0];
-
-    setLaudo(laudo);
+    if (laudoIndex !== -1) {
+      const laudo = objeto.tipos_de_documentos.splice(laudoIndex, 1)[0];
+      setLaudo(laudo);
+    }
     setObjeto(objeto);
     geraInitialValues(objeto);
   };
@@ -267,6 +269,17 @@ export default () => {
     })();
   }, []);
 
+  const documentoRecebimentoPassouPorAprovacao = useMemo(() => {
+    return (
+      objeto.logs &&
+      objeto.logs.filter(
+        (_log) =>
+          _log.status_evento_explicacao ===
+          STATUS_DOCUMENTOS_DE_RECEBIMENTO.APROVADO
+      ).length > 0
+    );
+  }, [objeto.logs]);
+
   return (
     <Spin tip="Carregando..." spinning={carregando}>
       <div className="card mt-3 card-analisar-documentos-recebimento">
@@ -419,6 +432,7 @@ export default () => {
                       className="input-analise"
                       required
                       validate={required}
+                      disabled={documentoRecebimentoPassouPorAprovacao}
                     />
                   </div>
                   {values["laboratorio"] && (
@@ -442,6 +456,7 @@ export default () => {
                       required
                       validate={required}
                       agrupadorMilhar
+                      disabled={documentoRecebimentoPassouPorAprovacao}
                     />
                   </div>
                   <div className="col-4">
@@ -455,6 +470,7 @@ export default () => {
                       className="input-analise"
                       required
                       validate={required}
+                      disabled={documentoRecebimentoPassouPorAprovacao}
                     />
                   </div>
                   <div className="col-4">
@@ -466,6 +482,7 @@ export default () => {
                       required
                       validate={required}
                       agrupadorMilhar
+                      disabled={documentoRecebimentoPassouPorAprovacao}
                     />
                   </div>
                   <div className="col-4">
@@ -479,6 +496,7 @@ export default () => {
                       validate={required}
                       minDate={null}
                       maxDate={null}
+                      disabled={documentoRecebimentoPassouPorAprovacao}
                     />
                   </div>
                   <div className="col-8">
@@ -489,6 +507,7 @@ export default () => {
                       placeholder="Digite o(s) nº do(s) lote(s)"
                       required
                       validate={required}
+                      disabled={documentoRecebimentoPassouPorAprovacao}
                     />
                   </div>
 
@@ -505,6 +524,7 @@ export default () => {
                           validate={required}
                           minDate={null}
                           maxDate={new Date()}
+                          disabled={documentoRecebimentoPassouPorAprovacao}
                         />
                       </div>
                       <div className="col">
@@ -517,6 +537,7 @@ export default () => {
                           required
                           validate={required}
                           minDate={new Date()}
+                          disabled={documentoRecebimentoPassouPorAprovacao}
                         />
                       </div>
                       <div className="col">
@@ -530,6 +551,7 @@ export default () => {
                           placeholder="Selecione um prazo"
                           required
                           validate={required}
+                          disabled={documentoRecebimentoPassouPorAprovacao}
                         />
                       </div>
 
@@ -554,6 +576,7 @@ export default () => {
                             className="input-analise"
                             onClick={() => adicionaPrazo()}
                             tooltipExterno={"Adicionar data de fabricação"}
+                            disabled={documentoRecebimentoPassouPorAprovacao}
                           />
                         ) : (
                           <Botao
