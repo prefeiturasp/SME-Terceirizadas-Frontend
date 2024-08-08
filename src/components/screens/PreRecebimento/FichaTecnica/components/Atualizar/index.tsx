@@ -23,8 +23,7 @@ import {
   inteiroOuDecimalComVirgula,
   inteiroOuDecimalPositivoOuNegativo,
 } from "helpers/fieldValidators";
-import FormPereciveis from "../Cadastrar/components/FormPereciveis";
-import FormNaoPereciveis from "../Cadastrar/components/FormNaoPereciveis";
+import FormPereciveisENaoPereciveis from "../Cadastrar/components/FormPereciveisENaoPereciveis";
 import { InformacaoNutricional } from "interfaces/produto.interface";
 import { TerceirizadaComEnderecoInterface } from "interfaces/terceirizada.interface";
 import FormProponente from "../Cadastrar/components/FormProponente";
@@ -325,21 +324,11 @@ export default () => {
                     </section>
 
                     <section id="detalhes_produto">
-                      {ehPerecivel && (
-                        <FormPereciveis
-                          values={values}
-                          desabilitar={true}
-                          atualizacao={true}
-                        />
-                      )}
-
-                      {ehNaoPerecivel && (
-                        <FormNaoPereciveis
-                          values={values}
-                          desabilitar={true}
-                          atualizacao={true}
-                        />
-                      )}
+                      <FormPereciveisENaoPereciveis
+                        values={values}
+                        desabilitar={true}
+                        atualizacao={true}
+                      />
                     </section>
 
                     <section id="informacoes_nutricionais">
