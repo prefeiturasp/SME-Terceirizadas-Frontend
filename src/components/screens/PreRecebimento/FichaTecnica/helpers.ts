@@ -564,7 +564,7 @@ export const formataPayloadCadastroFichaTecnica = (
   let payload: FichaTecnicaPayload = {
     ...gerarCamposObrigatoriosRascunho(values, produtosOptions),
     ...gerarCamposProponenteFabricante(values, proponente, fabricantesOptions),
-    ...gerarCamposDetalhesProduto(values, ehPereciveis),
+    ...gerarCamposDetalhesProduto(values),
     ...gerarCamposInformacoesNutricionais(values),
     ...gerarCamposConservacao(values, ehPereciveis),
     ...(ehPereciveis
@@ -588,9 +588,7 @@ export const formataPayloadCorrecaoFichaTecnica = (
   password: string
 ) => {
   let payload: FichaTecnicaPayload = {
-    ...(!conferidos.detalhes_produto
-      ? gerarCamposDetalhesProduto(values, ehPereciveis)
-      : {}),
+    ...(!conferidos.detalhes_produto ? gerarCamposDetalhesProduto(values) : {}),
     ...(!conferidos.informacoes_nutricionais
       ? gerarCamposInformacoesNutricionais(values)
       : {}),
@@ -687,21 +685,13 @@ const gerarCamposProponenteFabricante = (
   };
 };
 
-const gerarCamposDetalhesProduto = (
-  values: Record<string, any>,
-  ehPereciveis: boolean
-) => {
+const gerarCamposDetalhesProduto = (values: Record<string, any>) => {
   return {
     prazo_validade: values.prazo_validade || "",
-    numero_registro: ehPereciveis ? values.numero_registro || "" : undefined,
+    numero_registro: values.numero_registro || "",
     agroecologico: stringToBoolean(values.agroecologico as string),
     organico: stringToBoolean(values.organico as string),
-    mecanismo_controle:
-      retornaValorSeCategoriaPereciveis(
-        values,
-        ehPereciveis,
-        "mecanismo_controle"
-      ) || undefined,
+    mecanismo_controle: values.mecanismo_controle || undefined,
     componentes_produto: values.componentes_produto || "",
     alergenicos: stringToBoolean(values.alergenicos as string),
     ingredientes_alergenicos: values.ingredientes_alergenicos || "",
