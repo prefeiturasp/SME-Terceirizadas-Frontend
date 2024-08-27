@@ -1,0 +1,30 @@
+@import "../../../../../../styles/variables.scss";
+
+.card-corrigir-documentos-recebimento {
+  color: $blackInput;
+  font-size: 14px;
+
+  .green-bold {
+    color: $greenDark;
+    font-weight: bold;
+  }
+
+  .orange-bold {
+    color: $orange;
+    font-weight: bold;
+  }
+
+  .subtitulo {
+    color: $greenDark;
+    font-size: 16px;
+    font-weight: bold;
+    margin: 25px 0px;
+  }
+
+  .subtitulo-documento {
+    color: $greenDark;
+    font-size: 15px;
+    font-weight: bold;
+    margin: 12px 0px;
+  }
+}

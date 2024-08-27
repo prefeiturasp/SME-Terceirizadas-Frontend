@@ -81,6 +81,15 @@ export const getListaFichasTecnicasSimples =
     }
   };
 
+export const getListaFichasTecnicasSimplesAprovadas =
+  async (): Promise<ResponseFichasTecnicasSimples> => {
+    try {
+      return await axios.get(`/ficha-tecnica/lista-simples-aprovadas/`);
+    } catch (error) {
+      toastError(getMensagemDeErro(error.response.status));
+    }
+  };
+
 export const getListaFichasTecnicasSimplesSemCronograma =
   async (): Promise<ResponseFichasTecnicasSimples> => {
     try {
