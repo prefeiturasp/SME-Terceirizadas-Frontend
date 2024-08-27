@@ -44,7 +44,7 @@ import FormEtapa from "../../../PreRecebimento/FormEtapa";
 import { onChangeEtapas } from "components/PreRecebimento/FormEtapa/helper";
 import FormRecebimento from "components/PreRecebimento/FormRecebimento";
 import {
-  getListaFichasTecnicasSimples,
+  getListaFichasTecnicasSimplesAprovadas,
   getDadosCronogramaFichaTecnica,
 } from "services/fichaTecnica.service";
 import {
@@ -196,7 +196,7 @@ export default () => {
   };
 
   const buscaFichasTecnicas = async () => {
-    const response = await getListaFichasTecnicasSimples();
+    const response = await getListaFichasTecnicasSimplesAprovadas();
     setFichasTecnicas(response.data.results);
   };
 

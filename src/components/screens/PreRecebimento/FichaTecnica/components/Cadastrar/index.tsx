@@ -24,8 +24,7 @@ import Botao from "../../../../../Shareable/Botao";
 import { cepMask, cnpjMask, telefoneMask } from "constants/shared";
 import { getListaFiltradaAutoCompleteSelect } from "helpers/autoCompleteSelect";
 import AutoCompleteSelectField from "components/Shareable/AutoCompleteSelectField";
-import FormPereciveis from "./components/FormPereciveis";
-import FormNaoPereciveis from "./components/FormNaoPereciveis";
+import FormPereciveisENaoPereciveis from "./components/FormPereciveisENaoPereciveis";
 import TabelaNutricional from "components/Shareable/TabelaNutricional";
 import Select from "components/Shareable/Select";
 import ModalCadastrarItemIndividual from "components/Shareable/ModalCadastrarItemIndividual";
@@ -431,12 +430,7 @@ export default () => {
                       </section>
 
                       <section id="formProduto">
-                        {values["categoria"] === "PERECIVEIS" && (
-                          <FormPereciveis values={values} />
-                        )}
-                        {values["categoria"] === "NAO_PERECIVEIS" && (
-                          <FormNaoPereciveis values={values} />
-                        )}
+                        <FormPereciveisENaoPereciveis values={values} />
                       </section>
                     </Collapse>
                   </>

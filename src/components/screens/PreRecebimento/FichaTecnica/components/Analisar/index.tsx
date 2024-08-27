@@ -16,8 +16,7 @@ import {
   carregaListaCompletaInformacoesNutricionais,
   carregarDadosAnalisarDetalhar,
 } from "../../helpers";
-import FormPereciveis from "../Cadastrar/components/FormPereciveis";
-import FormNaoPereciveis from "../Cadastrar/components/FormNaoPereciveis";
+import FormPereciveisENaoPereciveis from "../Cadastrar/components/FormPereciveisENaoPereciveis";
 import { InformacaoNutricional } from "interfaces/produto.interface";
 import { TerceirizadaComEnderecoInterface } from "interfaces/terceirizada.interface";
 import FormProponente from "../Cadastrar/components/FormProponente";
@@ -514,12 +513,10 @@ export default ({ somenteLeitura = false }: AnalisarProps) => {
                     </section>
 
                     <section id="detalhes_produto">
-                      {ehPerecivel && (
-                        <FormPereciveis values={values} desabilitar={true} />
-                      )}
-                      {ehNaoPerecivel && (
-                        <FormNaoPereciveis values={values} desabilitar={true} />
-                      )}
+                      <FormPereciveisENaoPereciveis
+                        values={values}
+                        desabilitar={true}
+                      />
                       {!somenteLeitura && (
                         <FormAprovacao
                           name={"detalhes_produto"}

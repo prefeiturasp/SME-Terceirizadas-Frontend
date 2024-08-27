@@ -9,7 +9,7 @@ interface Props {
   atualizacao?: boolean;
 }
 
-const FormPereciveis: React.FC<Props> = ({
+const FormPereciveisENaoPereciveis: React.FC<Props> = ({
   values,
   desabilitar = false,
   atualizacao = false,
@@ -298,4 +298,4 @@ const FormPereciveis: React.FC<Props> = ({
   );
 };
 
-export default FormPereciveis;
+export default FormPereciveisENaoPereciveis;
