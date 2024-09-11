@@ -227,13 +227,17 @@ export const AcompanhamentoDeLancamentos = () => {
     };
     setCurrentPage(1);
 
-    //onPageChanged(1, { status: statusSelecionado, ...initialValues });
-
     getMesesAnosSolicitacoesMedicaoinicialAsync();
 
     if (!usuarioEhEscolaTerceirizadaQualquerPerfil()) {
-      getDiretoriasRegionaisAsync();
       getTiposUnidadeEscolarAsync();
+    }
+
+    if (!usuarioEhDRE() && !usuarioEhEscolaTerceirizadaQualquerPerfil()) {
+      getDiretoriasRegionaisAsync();
+    } else {
+      onPageChanged(1, { status: statusSelecionado, ...initialValues });
+      setDiretoriasRegionais([]);
     }
   }, []);
 
