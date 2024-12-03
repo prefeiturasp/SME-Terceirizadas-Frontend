@@ -29,7 +29,7 @@ pipeline {
           steps {
               withSonarQubeEnv('sonarqube-local'){
                 sh 'echo "[ INFO ] Iniciando analise Sonar..." && sonar-scanner \
-                -Dsonar.projectKey=SME-Terceirizadas-Frontend \
+                -Dsonar.projectKey=SME-SIGPAE-Frontend \
                 -Dsonar.sources=.'
             }
           }
