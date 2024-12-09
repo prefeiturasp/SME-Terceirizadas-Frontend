@@ -60,7 +60,7 @@
     "jest": "^29.7.0",
     "jquery.easing": "^1.4.1",
     "js-cookie": "^3.0.5",
-    "jwt-decode": "^3.1.2",
+    "jwt-decode": "^4.0.0",
     "locutus": "^2.0.16",
     "moment": "^2.29.4",
     "multiselect-react-dropdown": "^2.0.25",
