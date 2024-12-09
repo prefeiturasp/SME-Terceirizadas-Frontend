@@ -272,6 +272,7 @@ const authService = {
   getToken,
   isLoggedIn,
   isValidResponse,
+  needsToRefreshToken,
 };
 
 export default authService;
