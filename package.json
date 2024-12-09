@@ -25,7 +25,8 @@
         "functions": 1.28,
         "lines": 2.89
       }
-    }
+    },
+    "transformIgnorePatterns": ["node_modules\/(?!axios)"]
   },
   "dependencies": {
     "@babel/preset-react": "^7.18.6",
