@@ -1,5 +1,5 @@
-import { render, screen } from "@testing-library/react";
 import "@testing-library/jest-dom";
+import { render, screen } from "@testing-library/react";
 import React from "react";
 import { FluxoDeStatus } from "../../FluxoDeStatus";
 import { fluxoPartindoEscola } from "../helper";
@@ -60,10 +60,6 @@ describe("Teste <FluxoDeStatus>", () => {
   });
 
   it("renderiza a largura corretamente", () => {
-    /*expect(
-      wrapper.find(".progressbar").find("li").at(2).props().style
-    ).toHaveProperty("width", "33.333333333333336%");*/
-
     const ulElement = screen.getByTestId("progressbar");
     const listItems = ulElement.querySelectorAll("li");
     expect(listItems[1]).toHaveStyle("width: 33.333333333333336%");
