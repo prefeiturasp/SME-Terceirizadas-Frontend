@@ -166,6 +166,32 @@ describe("Test <PeriodoLancamentoMedicaoInicialCEI> com inclusão em dia não le
     expect(screen.getByText("ALIMENTAÇÃO")).toBeInTheDocument();
   });
 
+  it("renderiza label `Matriculados` dentro da seção `ALIMENTAÇÃO`", async () => {
+    await awaitServices();
+    const categoriaAlimentacaoUuid = "0e1f14ce-685a-4d4c-b0a7-96efe52b754f";
+    const myElement = screen.getByTestId(
+      `div-lancamentos-por-categoria-${categoriaAlimentacaoUuid}`
+    );
+    const allMatriculados = screen.getAllByText("Matriculados");
+    const specificMatriculados = allMatriculados.find((element) =>
+      myElement.contains(element)
+    );
+    expect(specificMatriculados).toBeInTheDocument();
+  });
+
+  it("renderiza label `Seg.` dentro da seção `ALIMENTAÇÃO`", async () => {
+    await awaitServices();
+    const categoriaAlimentacaoUuid = "0e1f14ce-685a-4d4c-b0a7-96efe52b754f";
+    const myElement = screen.getByTestId(
+      `div-lancamentos-por-categoria-${categoriaAlimentacaoUuid}`
+    );
+    const allMatriculados = screen.getAllByText("Seg.");
+    const specificMatriculados = allMatriculados.find((element) =>
+      myElement.contains(element)
+    );
+    expect(specificMatriculados).toBeInTheDocument();
+  });
+
   it("renderiza label `DIETA ESPECIAL - TIPO B - LANCHE`", async () => {
     await awaitServices();
     expect(

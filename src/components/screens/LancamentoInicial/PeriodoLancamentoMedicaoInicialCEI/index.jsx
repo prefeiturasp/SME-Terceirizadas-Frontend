@@ -1951,7 +1951,10 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
                       {categoriasDeMedicao.length > 0 &&
                         !loading &&
                         categoriasDeMedicao.map((categoria) => (
-                          <div key={categoria.uuid}>
+                          <div
+                            key={categoria.uuid}
+                            data-testid={`div-lancamentos-por-categoria-${categoria.uuid}`}
+                          >
                             <b className="pb-2 section-title">
                               {formataNomeCategoriaSolAlimentacoesInfantil(
                                 categoria.nome
