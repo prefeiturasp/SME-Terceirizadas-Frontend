@@ -1841,12 +1841,12 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
               <form onSubmit={handleSubmit}>
                 <FormSpy
                   subscription={{ values: true, active: true }}
-                  onChange={(changes) =>
+                  onChange={(changes) => {
                     setFormValuesAtualizados({
                       week: semanaSelecionada,
                       ...changes.values,
-                    })
-                  }
+                    });
+                  }}
                 />
                 <div className="card mt-3">
                   <div className="card-body">
@@ -1854,6 +1854,7 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
                       <div className="col-3 mes-lancamento">
                         <b className="pb-2 mb-2">Mês do Lançamento</b>
                         <Field
+                          dataTestid="input-mes-lancamento"
                           component={InputText}
                           name="mes_lancamento"
                           disabled={true}
@@ -1862,6 +1863,7 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
                       <div className="col-4">
                         <b className="pb-2">Período de Lançamento</b>
                         <Field
+                          dataTestid={"input-periodo-lancamento"}
                           component={InputText}
                           name="periodo_escolar"
                           disabled={true}
