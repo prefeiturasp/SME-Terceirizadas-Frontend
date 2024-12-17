@@ -149,6 +149,10 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
     valoresMatriculadosFaixaEtariaDia,
     setValoresMatriculadosFaixaEtariaDia,
   ] = useState([]);
+  const [
+    valoresMatriculadosFaixaEtariaDiaInclusoes,
+    setValoresMatriculadosFaixaEtariaDiaInclusoes,
+  ] = useState([]);
   const [valoresMatriculadosEmeiDaCemei, setValoresMatriculadosEmeiDaCemei] =
     useState([]);
   const [logQtdDietasAutorizadasCEI, setLogQtdDietasAutorizadasCEI] = useState(
@@ -271,6 +275,22 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
           location
         );
       setInclusoesAutorizadas(response_inclusoes_autorizadas);
+      if (response_inclusoes_autorizadas.length > 0 && periodo === "PARCIAL") {
+        const params = {
+          escola_uuid: escola.uuid,
+          nome_periodo_escolar: "INTEGRAL",
+          mes: mes,
+          ano: ano,
+          dias: response_inclusoes_autorizadas
+            .map((inclusao) => inclusao.dia)
+            .join(","),
+        };
+        const response_log_matriculados_por_faixa_etaria_dia_inclusoes =
+          await getLogMatriculadosPorFaixaEtariaDia(params);
+        setValoresMatriculadosFaixaEtariaDiaInclusoes(
+          response_log_matriculados_por_faixa_etaria_dia_inclusoes.data
+        );
+      }
 
       let response_alteracoes_alimentacao_autorizadas = [];
       response_alteracoes_alimentacao_autorizadas =
@@ -524,7 +544,8 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
         response_matriculados_emei_da_cemei.data,
         response_log_dietas_autorizadas_emei_da_cemei.data,
         response_kit_lanches_autorizadas,
-        response_inclusoes_autorizadas
+        response_inclusoes_autorizadas,
+        valoresMatriculadosFaixaEtariaDiaInclusoes
       );
 
       let items = [];
@@ -561,7 +582,8 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
     matriculadosEmeiDaCemei,
     logQtdDietasAutorizadasEmeiDaCemei,
     kitLanchesAutorizadas,
-    solInclusoesAutorizadas
+    solInclusoesAutorizadas,
+    valoresMatriculadosFaixaEtariaDiaInclusoes
   ) => {
     let dadosValoresMedicoes = {};
     let dadosValoresMatriculadosFaixaEtariaDia = {};
@@ -885,10 +907,24 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
           },
           0
         );
+
+        let quantidade = objMatriculado.quantidade;
+        const inclusaoNesseDia =
+          valoresMatriculadosFaixaEtariaDiaInclusoes.length > 0 &&
+          valoresMatriculadosFaixaEtariaDiaInclusoes.find(
+            (valorMatriculados) =>
+              valorMatriculados.dia === objMatriculado.dia &&
+              valorMatriculados.faixa_etaria.uuid ===
+                objMatriculado.faixa_etaria.uuid
+          );
+        if (inclusaoNesseDia) {
+          quantidade = inclusaoNesseDia.quantidade;
+        }
+
         dadosValoresMatriculadosFaixaEtariaDia[
           `matriculados__faixa_${objMatriculado.faixa_etaria.uuid}__dia_${objMatriculado.dia}__categoria_${idCategoriaAlimentacao}`
-        ] = objMatriculado.quantidade
-          ? `${Math.max(objMatriculado.quantidade - somaDietasMesmoDia, 0)}`
+        ] = quantidade
+          ? `${Math.max(quantidade - somaDietasMesmoDia, 0)}`
           : null;
       });
 
@@ -1014,7 +1050,8 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
         valoresMatriculadosEmeiDaCemei,
         logQtdDietasAutorizadasEmeiDaCemei,
         kitLanchesAutorizadas,
-        inclusoesAutorizadas
+        inclusoesAutorizadas,
+        valoresMatriculadosFaixaEtariaDiaInclusoes
       );
     };
     semanaSelecionada && formatar();
@@ -1325,7 +1362,8 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
         valoresMatriculadosEmeiDaCemei,
         logQtdDietasAutorizadasEmeiDaCemei,
         kitLanchesAutorizadas,
-        inclusoesAutorizadas
+        inclusoesAutorizadas,
+        valoresMatriculadosFaixaEtariaDiaInclusoes
       );
     }
     setLoading(false);
