@@ -2,13 +2,35 @@ import "@testing-library/jest-dom";
 import { render, screen, waitFor } from "@testing-library/react";
 import React from "react";
 import { MemoryRouter } from "react-router-dom";
-import { PeriodoLancamentoMedicaoInicialCEI } from "..";
-import * as perfilService from "services/perfil.service";
-import { mockMeusDadosEscolaCEI } from "./mocks/mockMeusDadosEscolaCEI";
 import { getListaDiasSobremesaDoce } from "services/medicaoInicial/diaSobremesaDoce.service";
+import * as periodoLancamentoMedicaoService from "services/medicaoInicial/periodoLancamentoMedicao.service";
+import { getSolicitacoesInclusoesAutorizadasEscola } from "services/medicaoInicial/periodoLancamentoMedicao.service";
+import * as perfilService from "services/perfil.service";
+import { PeriodoLancamentoMedicaoInicialCEI } from "..";
+import { mockInclusoesAutorizadasEscolaCEI } from "./mocks/mockInclusoesAutorizadasEscolaCEI.";
+import { mockLogsMatriculadosCEI } from "./mocks/mockLogsMatriculadosCEI";
+import { mockLogsMatriculadosCEIInclusao } from "./mocks/mockLogsMatriculadosCEIInclusao";
+import { mockMeusDadosEscolaCEI } from "./mocks/mockMeusDadosEscolaCEI";
+import { mockCategoriasMedicaoCEI } from "./mocks/mockCategoriasMedicaoCEI";
+import { mockLogsDietasAutorizadasCEI } from "./mocks/mockLogsDietasAutorizadasCEI";
+import { mockValoresMedicaoCEI } from "./mocks/mockValoresMedicaoCEI";
+import { mockDiasCalendarioCEI } from "./mocks/mockDiasCalendarioCEI";
+import { mockFeriadosNoMesCEI } from "./mocks/mockFeriadosNoMesCEI";
 
 jest.mock("services/perfil.service.js");
 jest.mock("services/medicaoInicial/diaSobremesaDoce.service.js");
+jest.mock("services/medicaoInicial/periodoLancamentoMedicao.service");
+
+const awaitServices = async () => {
+  await waitFor(() => expect(perfilService.meusDados).toHaveBeenCalled());
+  await waitFor(() => expect(getListaDiasSobremesaDoce).toHaveBeenCalled());
+  await waitFor(() =>
+    expect(getSolicitacoesInclusoesAutorizadasEscola).toHaveBeenCalled()
+  );
+  await waitFor(() =>
+    expect(periodoLancamentoMedicaoService.getFeriadosNoMes).toHaveBeenCalled()
+  );
+};
 
 describe("Test <PeriodoLancamentoMedicaoInicialCEI> com inclusão em dia não letivo", () => {
   const mockLocationState = {
@@ -25,7 +47,51 @@ describe("Test <PeriodoLancamentoMedicaoInicialCEI> com inclusão em dia não le
 
   beforeEach(() => {
     perfilService.meusDados.mockResolvedValue(mockMeusDadosEscolaCEI);
-    getListaDiasSobremesaDoce.mockResolvedValue([]);
+    getListaDiasSobremesaDoce.mockResolvedValue({ data: [], status: 200 });
+    getSolicitacoesInclusoesAutorizadasEscola.mockResolvedValue({
+      data: mockInclusoesAutorizadasEscolaCEI,
+      status: 200,
+    });
+    periodoLancamentoMedicaoService.getLogMatriculadosPorFaixaEtariaDia.mockResolvedValueOnce(
+      {
+        data: mockLogsMatriculadosCEIInclusao,
+        status: 200,
+      }
+    );
+    periodoLancamentoMedicaoService.getSolicitacoesAlteracoesAlimentacaoAutorizadasEscola.mockResolvedValue(
+      { results: [] }
+    );
+    periodoLancamentoMedicaoService.getLogMatriculadosPorFaixaEtariaDia.mockResolvedValueOnce(
+      {
+        data: mockLogsMatriculadosCEI,
+        status: 200,
+      }
+    );
+    periodoLancamentoMedicaoService.getSolicitacoesSuspensoesAutorizadasEscola.mockResolvedValue(
+      { results: [] }
+    );
+    periodoLancamentoMedicaoService.getCategoriasDeMedicao.mockResolvedValue({
+      data: mockCategoriasMedicaoCEI,
+      status: 200,
+    });
+    periodoLancamentoMedicaoService.getLogDietasAutorizadasCEIPeriodo.mockResolvedValue(
+      { data: mockLogsDietasAutorizadasCEI, status: 200 }
+    );
+    periodoLancamentoMedicaoService.getValoresPeriodosLancamentos.mockResolvedValue(
+      { data: mockValoresMedicaoCEI, status: 200 }
+    );
+    periodoLancamentoMedicaoService.getDiasParaCorrecao.mockResolvedValue({
+      data: [],
+      status: 200,
+    });
+    periodoLancamentoMedicaoService.getDiasCalendario.mockResolvedValue({
+      data: mockDiasCalendarioCEI,
+      status: 200,
+    });
+    periodoLancamentoMedicaoService.getFeriadosNoMes.mockResolvedValue({
+      data: mockFeriadosNoMesCEI,
+      status: 200,
+    });
 
     render(
       <MemoryRouter
@@ -85,7 +151,25 @@ describe("Test <PeriodoLancamentoMedicaoInicialCEI> com inclusão em dia não le
     ).toBeInTheDocument();
   });
 
-  /*it("renderiza label `Semana 1`", () => {
+  it("renderiza label `Semana 1`", async () => {
+    await awaitServices();
     expect(screen.getByText("Semana 1")).toBeInTheDocument();
-  });*/
+  });
+
+  it("renderiza label `Semana 5`", async () => {
+    await awaitServices();
+    expect(screen.getByText("Semana 5")).toBeInTheDocument();
+  });
+
+  it("renderiza label `ALIMENTAÇÃO`", async () => {
+    await awaitServices();
+    expect(screen.getByText("ALIMENTAÇÃO")).toBeInTheDocument();
+  });
+
+  it("renderiza label `DIETA ESPECIAL - TIPO B - LANCHE`", async () => {
+    await awaitServices();
+    expect(
+      screen.getByText("DIETA ESPECIAL - TIPO B - LANCHE")
+    ).toBeInTheDocument();
+  });
 });
