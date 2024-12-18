@@ -52,6 +52,7 @@ import {
   exibirTooltipDietasInclusaoDiaNaoLetivoCEI,
   campoDietaComInclusaoAutorizadaSemObservacao,
   repeticaoSobremesaDoceComValorESemObservacao,
+  campoAlimentacoesAutorizadasDiaNaoLetivoCEINaoPreenchidoESemObservacao,
 } from "./validacoes";
 import {
   categoriasParaExibir,
@@ -1536,6 +1537,13 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
             errors,
             categoriasDeMedicao
           )) ||
+          campoAlimentacoesAutorizadasDiaNaoLetivoCEINaoPreenchidoESemObservacao(
+            inclusoesAutorizadas,
+            column,
+            categoria,
+            formValuesAtualizados,
+            valoresMatriculadosFaixaEtariaDia
+          ) ||
           exibirTooltipRPLAutorizadas(
             formValuesAtualizados,
             row,
@@ -2086,6 +2094,13 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
                                                           ],
                                                           formValuesAtualizados
                                                         )) ||
+                                                      campoAlimentacoesAutorizadasDiaNaoLetivoCEINaoPreenchidoESemObservacao(
+                                                        inclusoesAutorizadas,
+                                                        column,
+                                                        categoria,
+                                                        formValuesAtualizados,
+                                                        valoresMatriculadosFaixaEtariaDia
+                                                      ) ||
                                                       campoRefeicaoComRPLAutorizadaESemObservacao(
                                                         formValuesAtualizados,
                                                         column,
@@ -2455,9 +2470,7 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
                                                           row,
                                                           column,
                                                           categoria,
-                                                          inputsInclusaoComErro,
-                                                          exibirTooltipAoSalvar,
-                                                          validacaoDiaLetivo
+                                                          formValuesAtualizados
                                                         )}
                                                         exibeTooltipSuspensoesAutorizadasCEI={exibirTooltipSuspensoesAutorizadasCEI(
                                                           formValuesAtualizados,
