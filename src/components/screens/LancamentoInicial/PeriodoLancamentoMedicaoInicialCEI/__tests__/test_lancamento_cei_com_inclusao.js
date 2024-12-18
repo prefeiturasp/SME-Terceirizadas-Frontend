@@ -1,12 +1,5 @@
 import "@testing-library/jest-dom";
-import { render, screen, waitFor } from "@testing-library/react";
-import React from "react";
-import { MemoryRouter } from "react-router-dom";
-import { getListaDiasSobremesaDoce } from "services/medicaoInicial/diaSobremesaDoce.service";
-import * as periodoLancamentoMedicaoService from "services/medicaoInicial/periodoLancamentoMedicao.service";
-import { getSolicitacoesInclusoesAutorizadasEscola } from "services/medicaoInicial/periodoLancamentoMedicao.service";
-import * as perfilService from "services/perfil.service";
-import { PeriodoLancamentoMedicaoInicialCEI } from "..";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { mockCategoriasMedicaoCEI } from "mocks/medicaoInicial/PeriodoLancamentoMedicaoInicialCEI/mockCategoriasMedicaoCEI";
 import { mockDiasCalendarioCEI } from "mocks/medicaoInicial/PeriodoLancamentoMedicaoInicialCEI/mockDiasCalendarioCEI";
 import { mockFeriadosNoMesCEI } from "mocks/medicaoInicial/PeriodoLancamentoMedicaoInicialCEI/mockFeriadosNoMesCEI";
@@ -15,7 +8,15 @@ import { mockLogsDietasAutorizadasCEI } from "mocks/medicaoInicial/PeriodoLancam
 import { mockLogsMatriculadosCEI } from "mocks/medicaoInicial/PeriodoLancamentoMedicaoInicialCEI/mockLogsMatriculadosCEI";
 import { mockLogsMatriculadosCEIInclusao } from "mocks/medicaoInicial/PeriodoLancamentoMedicaoInicialCEI/mockLogsMatriculadosCEIInclusao";
 import { mockMeusDadosEscolaCEI } from "mocks/medicaoInicial/PeriodoLancamentoMedicaoInicialCEI/mockMeusDadosEscolaCEI";
+import { mockUpdateValoresPeriodosLancamentosCEI } from "mocks/medicaoInicial/PeriodoLancamentoMedicaoInicialCEI/mockUpdateValoresPeriodoLancamentoCEI";
 import { mockValoresMedicaoCEI } from "mocks/medicaoInicial/PeriodoLancamentoMedicaoInicialCEI/mockValoresMedicaoCEI";
+import React from "react";
+import { MemoryRouter } from "react-router-dom";
+import { getListaDiasSobremesaDoce } from "services/medicaoInicial/diaSobremesaDoce.service";
+import * as periodoLancamentoMedicaoService from "services/medicaoInicial/periodoLancamentoMedicao.service";
+import { getSolicitacoesInclusoesAutorizadasEscola } from "services/medicaoInicial/periodoLancamentoMedicao.service";
+import * as perfilService from "services/perfil.service";
+import { PeriodoLancamentoMedicaoInicialCEI } from "..";
 
 jest.mock("services/perfil.service.js");
 jest.mock("services/medicaoInicial/diaSobremesaDoce.service.js");
@@ -92,6 +93,12 @@ describe("Test <PeriodoLancamentoMedicaoInicialCEI> com inclusão em dia não le
       data: mockFeriadosNoMesCEI,
       status: 200,
     });
+    periodoLancamentoMedicaoService.updateValoresPeriodosLancamentos.mockResolvedValue(
+      {
+        data: mockUpdateValoresPeriodosLancamentosCEI,
+        status: 200,
+      }
+    );
 
     render(
       <MemoryRouter
@@ -197,5 +204,142 @@ describe("Test <PeriodoLancamentoMedicaoInicialCEI> com inclusão em dia não le
     expect(
       screen.getByText("DIETA ESPECIAL - TIPO B - LANCHE")
     ).toBeInTheDocument();
+  });
+
+  it("renderiza label `Seg.` dentro da seção `DIETA ESPECIAL - TIPO B - LANCHE`", async () => {
+    await awaitServices();
+    const categoriaDietaEspecialTipoBUuid =
+      "6ad79709-3611-4af3-a567-65fcf34b3d06";
+    const myElement = screen.getByTestId(
+      `div-lancamentos-por-categoria-${categoriaDietaEspecialTipoBUuid}`
+    );
+    const allMatriculados = screen.getAllByText("Seg.");
+    const specificMatriculados = allMatriculados.find((element) =>
+      myElement.contains(element)
+    );
+    expect(specificMatriculados).toBeInTheDocument();
+  });
+
+  it("renderiza label `Dietas Autorizadas` dentro da seção `DIETA ESPECIAL - TIPO B - LANCHE`", async () => {
+    await awaitServices();
+    const categoriaDietaEspecialTipoBUuid =
+      "6ad79709-3611-4af3-a567-65fcf34b3d06";
+    const myElement = screen.getByTestId(
+      `div-lancamentos-por-categoria-${categoriaDietaEspecialTipoBUuid}`
+    );
+    const allMatriculados = screen.getAllByText("Dietas Autorizadas");
+    const specificMatriculados = allMatriculados.find((element) =>
+      myElement.contains(element)
+    );
+    expect(specificMatriculados).toBeInTheDocument();
+  });
+
+  it("ao clicar na tab `Semana 2`, exibe, no dia 9, as frequências 47 e 17", async () => {
+    await awaitServices();
+    const semana2Element = screen.getByText("Semana 2");
+    fireEvent.click(semana2Element);
+    const inputElementMatriculados1AnoA3anosE11Meses = screen.getByTestId(
+      "matriculados__faixa_802ffeb0-3d70-4be9-97fe-20992ee9c0ff__dia_09__categoria_1"
+    );
+    expect(inputElementMatriculados1AnoA3anosE11Meses).toHaveAttribute(
+      "value",
+      "47"
+    );
+    const inputElementMatriculados4a6anos = screen.getByTestId(
+      "matriculados__faixa_0c914b27-c7cd-4682-a439-a4874745b005__dia_09__categoria_1"
+    );
+    expect(inputElementMatriculados4a6anos).toHaveAttribute("value", "17");
+  });
+});
+
+describe("Test <PeriodoLancamentoMedicaoInicialCEI> sem inclusão em dia não letivo", () => {
+  const mockLocationState = {
+    ehEmeiDaCemei: false,
+    escola: "CEI DIRET VILA BRASILANDIA",
+    justificativa_periodo: null,
+    mesAnoSelecionado: new Date("2024-11-01T00:00:00-03:00"),
+    periodo: "PARCIAL",
+    periodosInclusaoContinua: undefined,
+    status_periodo: "MEDICAO_EM_ABERTO_PARA_PREENCHIMENTO_UE",
+    status_solicitacao: "MEDICAO_EM_ABERTO_PARA_PREENCHIMENTO_UE",
+    tiposAlimentacao: [],
+  };
+
+  beforeEach(() => {
+    perfilService.meusDados.mockResolvedValue(mockMeusDadosEscolaCEI);
+    getListaDiasSobremesaDoce.mockResolvedValue({ data: [], status: 200 });
+    getSolicitacoesInclusoesAutorizadasEscola.mockResolvedValue({
+      data: { results: [] },
+      status: 200,
+    });
+    periodoLancamentoMedicaoService.getLogMatriculadosPorFaixaEtariaDia.mockResolvedValue(
+      {
+        data: mockLogsMatriculadosCEI,
+        status: 200,
+      }
+    );
+    periodoLancamentoMedicaoService.getSolicitacoesAlteracoesAlimentacaoAutorizadasEscola.mockResolvedValue(
+      { results: [] }
+    );
+    periodoLancamentoMedicaoService.getSolicitacoesSuspensoesAutorizadasEscola.mockResolvedValue(
+      { results: [] }
+    );
+    periodoLancamentoMedicaoService.getCategoriasDeMedicao.mockResolvedValue({
+      data: mockCategoriasMedicaoCEI,
+      status: 200,
+    });
+    periodoLancamentoMedicaoService.getLogDietasAutorizadasCEIPeriodo.mockResolvedValue(
+      { data: mockLogsDietasAutorizadasCEI, status: 200 }
+    );
+    periodoLancamentoMedicaoService.getValoresPeriodosLancamentos.mockResolvedValue(
+      { data: mockValoresMedicaoCEI, status: 200 }
+    );
+    periodoLancamentoMedicaoService.getDiasParaCorrecao.mockResolvedValue({
+      data: [],
+      status: 200,
+    });
+    periodoLancamentoMedicaoService.getDiasCalendario.mockResolvedValue({
+      data: mockDiasCalendarioCEI,
+      status: 200,
+    });
+    periodoLancamentoMedicaoService.getFeriadosNoMes.mockResolvedValue({
+      data: mockFeriadosNoMesCEI,
+      status: 200,
+    });
+    periodoLancamentoMedicaoService.updateValoresPeriodosLancamentos.mockResolvedValue(
+      {
+        data: mockUpdateValoresPeriodosLancamentosCEI,
+        status: 200,
+      }
+    );
+
+    render(
+      <MemoryRouter
+        initialEntries={[{ pathname: "/", state: mockLocationState }]}
+        future={{
+          v7_startTransition: true,
+          v7_relativeSplatPath: true,
+        }}
+      >
+        <PeriodoLancamentoMedicaoInicialCEI />
+      </MemoryRouter>
+    );
+  });
+
+  it("ao clicar na tab `Semana 2`, exibe, no dia 9, as frequências 2 e 1", async () => {
+    await awaitServices();
+    const semana2Element = screen.getByText("Semana 2");
+    fireEvent.click(semana2Element);
+    const inputElementMatriculados1AnoA3anosE11Meses = screen.getByTestId(
+      "matriculados__faixa_802ffeb0-3d70-4be9-97fe-20992ee9c0ff__dia_09__categoria_1"
+    );
+    expect(inputElementMatriculados1AnoA3anosE11Meses).toHaveAttribute(
+      "value",
+      "2"
+    );
+    const inputElementMatriculados4a6anos = screen.getByTestId(
+      "matriculados__faixa_0c914b27-c7cd-4682-a439-a4874745b005__dia_09__categoria_1"
+    );
+    expect(inputElementMatriculados4a6anos).toHaveAttribute("value", "1");
   });
 });
