@@ -7,15 +7,15 @@ import * as periodoLancamentoMedicaoService from "services/medicaoInicial/period
 import { getSolicitacoesInclusoesAutorizadasEscola } from "services/medicaoInicial/periodoLancamentoMedicao.service";
 import * as perfilService from "services/perfil.service";
 import { PeriodoLancamentoMedicaoInicialCEI } from "..";
-import { mockInclusoesAutorizadasEscolaCEI } from "./mocks/mockInclusoesAutorizadasEscolaCEI.";
-import { mockLogsMatriculadosCEI } from "./mocks/mockLogsMatriculadosCEI";
-import { mockLogsMatriculadosCEIInclusao } from "./mocks/mockLogsMatriculadosCEIInclusao";
-import { mockMeusDadosEscolaCEI } from "./mocks/mockMeusDadosEscolaCEI";
-import { mockCategoriasMedicaoCEI } from "./mocks/mockCategoriasMedicaoCEI";
-import { mockLogsDietasAutorizadasCEI } from "./mocks/mockLogsDietasAutorizadasCEI";
-import { mockValoresMedicaoCEI } from "./mocks/mockValoresMedicaoCEI";
-import { mockDiasCalendarioCEI } from "./mocks/mockDiasCalendarioCEI";
-import { mockFeriadosNoMesCEI } from "./mocks/mockFeriadosNoMesCEI";
+import { mockCategoriasMedicaoCEI } from "mocks/medicaoInicial/PeriodoLancamentoMedicaoInicialCEI/mockCategoriasMedicaoCEI";
+import { mockDiasCalendarioCEI } from "mocks/medicaoInicial/PeriodoLancamentoMedicaoInicialCEI/mockDiasCalendarioCEI";
+import { mockFeriadosNoMesCEI } from "mocks/medicaoInicial/PeriodoLancamentoMedicaoInicialCEI/mockFeriadosNoMesCEI";
+import { mockInclusoesAutorizadasEscolaCEI } from "mocks/medicaoInicial/PeriodoLancamentoMedicaoInicialCEI/mockInclusoesAutorizadasEscolaCEI.";
+import { mockLogsDietasAutorizadasCEI } from "mocks/medicaoInicial/PeriodoLancamentoMedicaoInicialCEI/mockLogsDietasAutorizadasCEI";
+import { mockLogsMatriculadosCEI } from "mocks/medicaoInicial/PeriodoLancamentoMedicaoInicialCEI/mockLogsMatriculadosCEI";
+import { mockLogsMatriculadosCEIInclusao } from "mocks/medicaoInicial/PeriodoLancamentoMedicaoInicialCEI/mockLogsMatriculadosCEIInclusao";
+import { mockMeusDadosEscolaCEI } from "mocks/medicaoInicial/PeriodoLancamentoMedicaoInicialCEI/mockMeusDadosEscolaCEI";
+import { mockValoresMedicaoCEI } from "mocks/medicaoInicial/PeriodoLancamentoMedicaoInicialCEI/mockValoresMedicaoCEI";
 
 jest.mock("services/perfil.service.js");
 jest.mock("services/medicaoInicial/diaSobremesaDoce.service.js");
