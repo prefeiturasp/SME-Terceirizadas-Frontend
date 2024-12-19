@@ -1,4 +1,4 @@
-export const mockResultados = () => ({
+export const mockResultados = {
   count: 32,
   next: "http://hom-sigpae.sme.prefeitura.sp.gov.br/produtos/?nome_edital=101010B&page=2&page_size=10",
   previous: null,
@@ -4222,4 +4222,4 @@ export const mockResultados = () => ({
       protocolos: [],
     },
   ],
-});
+};

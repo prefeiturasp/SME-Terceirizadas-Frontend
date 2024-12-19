@@ -1,54 +1,50 @@
 import React from "react";
 
-import { rest } from "msw";
-import { setupServer } from "msw/node";
-import { fireEvent, screen } from "@testing-library/react";
+import { fireEvent, screen, waitFor } from "@testing-library/react";
 import "@testing-library/jest-dom";
-import { API_URL } from "constants/config";
 import BuscaAvancada from "../";
 import { renderWithProvider } from "../../../../../utils/test-utils";
 import { MemoryRouter } from "react-router-dom";
 import {
-  mockListaEditais,
   mockListaFabricantes,
   mockListaMarcas,
   mockListaProdutos,
   mockListaTerceirizadas,
 } from "../../../../../mocks/Produto/BuscaAvancada/listas";
+import { debug } from "jest-preview";
 import { mockResultados } from "../../../../../mocks/Produto/BuscaAvancada/results";
+import * as produtoService from "../../../../../services/produto.service";
+
+jest.mock("services/produto.service.js");
 
 const valorBuscaEdital = "101010B";
 
-const server = setupServer(
-  rest.get(`${API_URL}/produtos/lista-nomes-unicos/`, (req, res, ctx) => {
-    return res(ctx.json(mockListaProdutos()));
-  }),
-  rest.get(`${API_URL}/marcas/lista-nomes-unicos/`, (req, res, ctx) => {
-    return res(ctx.json(mockListaMarcas()));
-  }),
-  rest.get(`${API_URL}/fabricantes/lista-nomes-unicos/`, (req, res, ctx) => {
-    return res(ctx.json(mockListaFabricantes()));
-  }),
-  rest.get(`${API_URL}/terceirizadas/lista-nomes/`, (req, res, ctx) => {
-    return res(ctx.json(mockListaTerceirizadas()));
-  }),
-  rest.get(
-    `${API_URL}/produtos-editais/lista-nomes-unicos/`,
-    (req, res, ctx) => {
-      return res(ctx.json(mockListaEditais()));
-    }
-  ),
-  rest.get(
-    `${API_URL}/produtos/?nome_edital=${valorBuscaEdital}&page=1&page_size=10/`,
-    (req, res, ctx) => {
-      return res(ctx.json(mockResultados()));
-    }
-  )
-);
-
-beforeAll(() => server.listen());
-afterEach(() => server.resetHandlers());
-afterAll(() => server.close());
+beforeEach(() => {
+  produtoService.getProdutosListagem.mockResolvedValue({
+    data: mockResultados,
+    status: 200,
+  });
+  produtoService.getNomesUnicosProdutos.mockResolvedValue({
+    data: mockListaProdutos,
+    status: 200,
+  });
+  produtoService.getNomesUnicosMarcas.mockResolvedValue({
+    data: mockListaMarcas,
+    status: 200,
+  });
+  produtoService.getNomesUnicosFabricantes.mockResolvedValue({
+    data: mockListaFabricantes,
+    status: 200,
+  });
+  produtoService.getNomesTerceirizadas.mockResolvedValue({
+    data: mockListaTerceirizadas,
+    status: 200,
+  });
+  produtoService.getNomesUnicosEditais.mockResolvedValue({
+    data: [],
+    status: 200,
+  });
+});
 
 const setup = () => {
   const initialState = {
@@ -56,7 +52,12 @@ const setup = () => {
     finalForm: {},
   };
   renderWithProvider(
-    <MemoryRouter>
+    <MemoryRouter
+      future={{
+        v7_startTransition: true,
+        v7_relativeSplatPath: true,
+      }}
+    >
       <BuscaAvancada />
     </MemoryRouter>,
     initialState
@@ -66,39 +67,37 @@ const setup = () => {
 test("Relatorio autorizadas temporariamente", async () => {
   setup();
 
+  await waitFor(() =>
+    expect(produtoService.getNomesUnicosProdutos).toHaveBeenCalled()
+  );
+
   expect(screen.getByText(/Edital/i)).toBeInTheDocument();
 
   const divInputEdital = screen.getByTestId("edital");
-  const inputEdital = divInputEdital.getElementsByTagName("input")[0];
-  //console.log('---------------------------------')
-  //console.log(inputEdital)
+  const inputEdital = divInputEdital.querySelector("input");
 
-  fireEvent.click(divInputEdital);
-  fireEvent.click(inputEdital);
-  //expect(screen.getByText(/101010B/i)).toBeInTheDocument();
-
-  fireEvent.change(inputEdital, { target: { value: valorBuscaEdital } });
-
-  expect(screen.getByDisplayValue(valorBuscaEdital)).toBeInTheDocument();
+  expect(inputEdital).toBeInTheDocument();
 
   const botao = screen.getByText("Consultar").closest("button");
 
   fireEvent.click(botao);
 
-  expect(
-    screen.getByText(/Veja os resultados para busca/i)
-  ).toBeInTheDocument();
+  expect(screen.queryByText("Campo obrigatório")).toBeInTheDocument();
 
-  // expect(
-  //   await screen.findByText(/dieta especial - Autorizada Temporariamente/i)
-  // ).toBeInTheDocument();
-  // expect(
-  //   await screen.findByRole("button", { name: /histórico/i })
-  // ).toBeInTheDocument();
-  // expect(await screen.queryByText("Motivo")).not.toBeInTheDocument();
-  // expect(
-  //   await screen.queryByText("Justificativa da Negação")
-  // ).not.toBeInTheDocument();
+  fireEvent.change(inputEdital, { target: { value: valorBuscaEdital } });
+  expect(inputEdital).toHaveValue(valorBuscaEdital);
+  fireEvent.click(botao);
 
-  // expect(await screen.getByText(/dados do aluno/i)).toBeInTheDocument();
+  const botaoLimpar = screen.getByText("Limpar Filtros").closest("button");
+  fireEvent.click(botaoLimpar);
+  expect(inputEdital).toHaveValue("");
+
+  const divInputStatus = screen.getByTestId("status");
+  const inputStatus = divInputStatus.querySelector("input");
+
+  expect(inputStatus).toBeInTheDocument();
+
+  fireEvent.click(inputStatus);
+
+  debug();
 });

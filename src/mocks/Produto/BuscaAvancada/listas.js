@@ -1,16 +1,16 @@
-export const mockListaProdutos = () => ({
+export const mockListaProdutos = {
   results: ["PITAIA", "JUJUBA"],
-});
+};
 
-export const mockListaMarcas = () => ({
+export const mockListaMarcas = {
   results: ["TANG", "DACOLI", "TESTE", "MOTOROLA"],
-});
+};
 
-export const mockListaFabricantes = () => ({
+export const mockListaFabricantes = {
   results: ["BIGUA LTDA", "PANCO LTDA", "PATEKO ME", "RENATA ME"],
-});
+};
 
-export const mockListaTerceirizadas = () => ({
+export const mockListaTerceirizadas = {
   results: [
     {
       uuid: "4a206eed-42f5-4b7f-9a91-404df255f337",
@@ -23,8 +23,8 @@ export const mockListaTerceirizadas = () => ({
       nome_fantasia: "ALIMENTAR",
     },
   ],
-});
+};
 
-export const mockListaEditais = () => ({
+export const mockListaEditais = {
   results: ["202020", "101010B"],
-});
+};
