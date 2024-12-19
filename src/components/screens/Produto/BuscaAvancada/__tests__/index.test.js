@@ -11,7 +11,6 @@ import {
   mockListaProdutos,
   mockListaTerceirizadas,
 } from "../../../../../mocks/Produto/BuscaAvancada/listas";
-import { debug } from "jest-preview";
 import { mockResultados } from "../../../../../mocks/Produto/BuscaAvancada/results";
 import * as produtoService from "../../../../../services/produto.service";
 
@@ -98,6 +97,4 @@ test("Relatorio autorizadas temporariamente", async () => {
   expect(inputStatus).toBeInTheDocument();
 
   fireEvent.click(inputStatus);
-
-  debug();
 });
