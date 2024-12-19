@@ -2044,6 +2044,7 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
                                           </div>
                                           {weekColumns.map((column) => (
                                             <div
+                                              data-testid={`div-botao-add-obs-${column.dia}-${categoria.id}-${row.name}`}
                                               key={column.dia}
                                               className={`${
                                                 validacaoSemana(column.dia)

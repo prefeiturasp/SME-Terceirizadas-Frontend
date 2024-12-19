@@ -234,7 +234,7 @@ describe("Test <PeriodoLancamentoMedicaoInicialCEI> com inclusão em dia não le
     expect(specificMatriculados).toBeInTheDocument();
   });
 
-  it("ao clicar na tab `Semana 2`, exibe, no dia 9, as frequências 47 e 17", async () => {
+  it("ao clicar na tab `Semana 2`, exibe, no dia 9, o número de matriculados 47 e 17", async () => {
     await awaitServices();
     const semana2Element = screen.getByText("Semana 2");
     fireEvent.click(semana2Element);
@@ -249,6 +249,34 @@ describe("Test <PeriodoLancamentoMedicaoInicialCEI> com inclusão em dia não le
       "matriculados__faixa_0c914b27-c7cd-4682-a439-a4874745b005__dia_09__categoria_1"
     );
     expect(inputElementMatriculados4a6anos).toHaveAttribute("value", "17");
+  });
+
+  it("ao clicar na tab `Semana 2`, exibe, no dia 9, nos campos frequência abaixo de 47 e 49 a borda warning", async () => {
+    await awaitServices();
+    const semana2Element = screen.getByText("Semana 2");
+    fireEvent.click(semana2Element);
+    const inputElementFrequencia1AnoA3anosE11Meses = screen.getByTestId(
+      "frequencia__faixa_802ffeb0-3d70-4be9-97fe-20992ee9c0ff__dia_09__categoria_1"
+    );
+    expect(inputElementFrequencia1AnoA3anosE11Meses).toHaveClass(
+      "border-warning"
+    );
+    const inputElementFrequencia4a6anos = screen.getByTestId(
+      "frequencia__faixa_0c914b27-c7cd-4682-a439-a4874745b005__dia_09__categoria_1"
+    );
+    expect(inputElementFrequencia4a6anos).toHaveClass("border-warning");
+  });
+
+  it("ao clicar na tab `Semana 2`, exibe, no dia 9, botão Adicionar obrigatório", async () => {
+    await awaitServices();
+    const semana2Element = screen.getByText("Semana 2");
+    fireEvent.click(semana2Element);
+    const botaoAdicionarDivElement = screen.getByTestId(
+      "div-botao-add-obs-09-1-observacoes"
+    );
+    const botaoAdicionar = botaoAdicionarDivElement.querySelector("button");
+    expect(botaoAdicionar).toHaveClass("red-button-outline");
+    expect(botaoAdicionar).toHaveTextContent("Adicionar");
   });
 });
 
